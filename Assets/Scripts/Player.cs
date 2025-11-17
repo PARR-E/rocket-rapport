@@ -24,8 +24,11 @@ public class Player : MonoBehaviour
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
 
-    
-
+    //Subscribers:
+    private void OnEnable()
+    {
+        
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -82,11 +85,11 @@ public class Player : MonoBehaviour
 
 
         //Update player position, according to user input and gravity:
-        rb.position += P1spd + P2spd;
-        rb.MovePosition(rb.position);
+        rb.MovePosition(rb.position + P1spd + P2spd);
 
         //Make the camera zoom out futher as the player gets frather from the starting area:
-        UpdateCamera(rb.position.y);
+        GameManager.Instance.target = rb.transform;
+        ZoomCamera(rb.position.y);
 
 
         //Debug statements:
@@ -126,6 +129,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Get the player's current transform:
+    Transform getTransform()
+    {
+        Debug.Log("Getting the transform");
+        return rb.transform;
+    }
+
     //Change the rigidbody's gravity value:
     void SetGravity(float _gravity)
     {
@@ -134,8 +144,12 @@ public class Player : MonoBehaviour
     }
 
     //Make camera zoom out as the rocket travels higher:
-    void UpdateCamera(float _playerY)
+    void ZoomCamera(float _playerY)
     {
-        GameManager.Instance.transform.position = new Vector3(0f, 3f, -10f - _playerY / 10);
+        GameManager.Instance.transform.position = new Vector3(
+            GameManager.Instance.transform.position.x, 
+            GameManager.Instance.transform.position.y, 
+            -10f - _playerY / 10
+        );
     }
 }

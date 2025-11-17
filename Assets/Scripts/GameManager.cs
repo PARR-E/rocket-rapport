@@ -4,11 +4,20 @@ using System;
 public class GameManager : MonoBehaviour
 {
     //Variables:
+    public Transform target;                                //Equals the player.
+    public float smoothTime = 0.2f;
+    public Vector3 offset = new Vector3(0.0f, 0.0f, 0.0f);  //Distance between camera and player.
+    
+    private Vector3 velocity = Vector3.zero;
+
     public static GameManager instance;                //This is used for the singleton.
-    //public Action<int> ElevationChange;                //Service for handling when player's height changes:
 
     //Method for being a singleton:
     public static GameManager Instance {
+        get { return instance; }
+    }
+    //ChatGPT says this creates 2 instances:
+    /*public static GameManager Instance {
         get {
             if (instance == null) {
                 GameObject obj = new GameObject("GameManager");
@@ -17,7 +26,7 @@ public class GameManager : MonoBehaviour
             }
             return instance;
         }
-    }
+    }*/
     //This is also needed to be a singleton:
     private void Awake()
     {   
@@ -42,6 +51,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
 
+    //Have the camera trail behind the player:
+    void FixedUpdate()
+    {   
+        Vector3 targetPos = new Vector3(target.position.x, target.position.y, transform.position.z) + offset;
+
+        transform.position = Vector3.SmoothDamp(
+            transform.position,
+            targetPos,
+            ref velocity,
+            smoothTime
+        );
     }
 }
