@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
     Vector3 P1spd = new Vector3(0.0f, 0.0f, 0.0f);     //XYZ values are how far each coordinate will update each frame.
     Vector3 P2spd = new Vector3(0.0f, 0.0f, 0.0f);
+    float altitude = 0.0f;
     float spdMax = 1.0f;
     float acceleration = 0.0025f;
     float deceleration = 0.0005f;
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
     //Subscribers:
     private void OnEnable()
     {
-        
+        GameManager.Instance.AltitudeEvent += GetAltitude;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -86,9 +87,10 @@ public class Player : MonoBehaviour
 
         //Update player position, according to user input and gravity:
         rb.MovePosition(rb.position + P1spd + P2spd);
+        altitude = rb.position.y / 1000.0f;
 
         //Make the camera zoom out futher as the player gets frather from the starting area:
-        GameManager.Instance.target = rb.transform;
+        //GameManager.Instance.target = rb.transform;
         ZoomCamera(rb.position.y);
 
 
@@ -132,8 +134,13 @@ public class Player : MonoBehaviour
     //Get the player's current transform:
     Transform getTransform()
     {
-        Debug.Log("Getting the transform");
         return rb.transform;
+    }
+
+    //Get the player's current altitude (score):
+    float GetAltitude()
+    {
+        return altitude;
     }
 
     //Change the rigidbody's gravity value:

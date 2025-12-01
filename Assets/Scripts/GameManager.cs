@@ -9,24 +9,17 @@ public class GameManager : MonoBehaviour
     public Vector3 offset = new Vector3(0.0f, 0.0f, 0.0f);  //Distance between camera and player.
     
     private Vector3 velocity = Vector3.zero;
+    public float score = 0.0f;
 
     public static GameManager instance;                //This is used for the singleton.
+
+    public event Func<float> AltitudeEvent;
+    public Action<float> UpdateScore;
 
     //Method for being a singleton:
     public static GameManager Instance {
         get { return instance; }
     }
-    //ChatGPT says this creates 2 instances:
-    /*public static GameManager Instance {
-        get {
-            if (instance == null) {
-                GameObject obj = new GameObject("GameManager");
-                instance = obj.AddComponent<GameManager>();
-                DontDestroyOnLoad(obj);
-            }
-            return instance;
-        }
-    }*/
     //This is also needed to be a singleton:
     private void Awake()
     {   
@@ -37,27 +30,25 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    //Subscribers:
-    /*private void OnEnable(){
-        Player.Instance.ElevationChange += UpdateCamera;        //Observer.
-    }*/
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        target = FindObjectOfType<Player>().transform;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        score = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
+        UpdateScore?.Invoke(score);
         
+        //Debug.Log("Score = " + score);
     }
 
     //Have the camera trail behind the player:
     void FixedUpdate()
     {   
-        Vector3 targetPos = new Vector3(target.position.x, target.position.y, transform.position.z) + offset;
+        Vector3 targetPos = new Vector3(transform.position.x, target.position.y, transform.position.z) + offset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,
