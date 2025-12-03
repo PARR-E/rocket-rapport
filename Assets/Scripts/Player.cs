@@ -19,7 +19,10 @@ public class Player : MonoBehaviour
     Vector3 P1spd = new Vector3(0.0f, 0.0f, 0.0f);     //XYZ values are how far each coordinate will update each frame.
     Vector3 P2spd = new Vector3(0.0f, 0.0f, 0.0f);
     float altitude = 0.0f;
+    float HP = 100.0f;
     float spdMax = 1.0f;
+    float highestSpd = 0.0f;
+    float lastHighestSpd = 0.0f;
     float acceleration = 0.0025f;
     float deceleration = 0.0005f;
     float gravity = -2.0f;                       //The initial low-gravity value.
@@ -84,10 +87,17 @@ public class Player : MonoBehaviour
         SpdCheck(P1spd);
         SpdCheck(P2spd);
 
-
         //Update player position, according to user input and gravity:
         rb.MovePosition(rb.position + P1spd + P2spd);
         altitude = rb.position.y / 1000.0f;
+
+        //Make sure the player never moves along the z-axis:
+        Vector3 onZ = rb.position;
+        onZ.z = 0.0f;
+        rb.MovePosition(onZ);
+
+        //Update value used for collision damage:
+        highestSpd = Mathf.Max(Math.Abs(P1spd.x), Math.Abs(P1spd.y)) + Mathf.Max(Math.Abs(P2spd.x), Math.Abs(P2spd.y));
 
         //Make the camera zoom out futher as the player gets frather from the starting area:
         //GameManager.Instance.target = rb.transform;
@@ -103,12 +113,27 @@ public class Player : MonoBehaviour
     //Handling collisions:
     void OnCollisionEnter(Collision collision)
     {
+        //Take damage:
+        if(lastHighestSpd > 0.000001)
+        {
+            HP -= lastHighestSpd * 10;
+        }
+        
+        GameManager.Instance.playerHP = HP;
+        
         //Decrease the current speed:
-        P1spd = P1spd / 3;
-        P2spd = P2spd / 3;
+        P1spd = P1spd * 0.0f; //P1spd / 3;
+        P2spd = P2spd * 0.0f; //P2spd / 3;
 
         //Log the name of the object that was collided with:
-        Debug.Log("Collided with: " + collision.gameObject.name);
+        //Debug.Log("Collided with: " + collision.gameObject.name);
+    }
+
+    //Happens last in a frame:
+    void LateUpdate()
+    {
+        lastHighestSpd = highestSpd;
+        Debug.Log("lastHighestSpd = " + lastHighestSpd);
     }
 
     void SpdCheck(Vector3 _spd)

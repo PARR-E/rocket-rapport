@@ -10,7 +10,8 @@ public class GameUIController : MonoBehaviour
     void Start()
 
     {
-        GameManager.Instance.UpdateScore += UpdateAltitude;
+        GameManager.Instance.scoreChanged += UpdateAltitude;
+        GameManager.Instance.healthChanged += UpdateHP;
     }
 
     // Update is called once per frame
@@ -25,9 +26,19 @@ public class GameUIController : MonoBehaviour
         //Update the altitude UI:
         TextMeshProUGUI textComponent;
 
-        Transform child2 = transform.GetChild(1);
-        textComponent = child2.GetComponent<TextMeshProUGUI>();
+        Transform child1 = transform.GetChild(1);
+        textComponent = child1.GetComponent<TextMeshProUGUI>();
 
         textComponent.text = score.ToString("F5") + " AU";          //F5 rounds the number to 5 decimal places.
+    }
+    void UpdateHP(float hp)
+    {
+        //Update the altitude UI:
+        TextMeshProUGUI textComponent;
+
+        Transform child3 = transform.GetChild(3);
+        textComponent = child3.GetComponent<TextMeshProUGUI>();
+
+        textComponent.text = hp.ToString("F2") + " HP";          //F2 rounds the number to 2 decimal places.
     }
 }

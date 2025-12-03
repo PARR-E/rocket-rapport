@@ -9,12 +9,14 @@ public class GameManager : MonoBehaviour
     public Vector3 offset = new Vector3(0.0f, 0.0f, 0.0f);  //Distance between camera and player.
     
     private Vector3 velocity = Vector3.zero;
-    public float score = 0.0f;
+    public float playerScore = 0.0f;
+    public float playerHP = 100.0f;
 
     public static GameManager instance;                //This is used for the singleton.
 
     public event Func<float> AltitudeEvent;
-    public Action<float> UpdateScore;
+    public Action<float> scoreChanged;
+    public Action<float> healthChanged;
 
     //Method for being a singleton:
     public static GameManager Instance {
@@ -39,8 +41,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        score = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
-        UpdateScore?.Invoke(score);
+        //Update the UI:
+        playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
+        scoreChanged?.Invoke(playerScore);
+        healthChanged?.Invoke(playerHP);
         
         //Debug.Log("Score = " + score);
     }
