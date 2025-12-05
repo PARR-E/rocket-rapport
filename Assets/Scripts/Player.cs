@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     float spdMax = 0.25f;
     float highestSpd = 0.0f;
     float lastHighestSpd = 0.0f;
-    float acceleration = 0.00075f;
+    float acceleration = 1.0f;
     //float deceleration = 0.00025f;
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
@@ -48,55 +48,55 @@ public class Player : MonoBehaviour
         //Player 1 input:   
         if (Input.GetKey(KeyCode.W))
         {
-            P1spd.y -= acceleration;
+            P1spd.y = -acceleration;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            P1spd.y += acceleration;
+            P1spd.y = acceleration;
         }
         else
         {
-            //P1spd.y -= deceleration;
+            P1spd.y = 0;
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            P1spd.x += acceleration;
+            P1spd.x = acceleration;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            P1spd.x -= acceleration;
+            P1spd.x = -acceleration;
         }
         else
         {
-            //P1spd.x -= deceleration;
+            P1spd.x = 0;
         }
 
         //Player 2 input:
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            P2spd.y -= acceleration;
+            P2spd.y = -acceleration;
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            P2spd.y += acceleration;
+            P2spd.y = acceleration;
         }
         else
         {
-            //P2spd.y -= deceleration;
+            P2spd.y = 0;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            P2spd.x += acceleration;
+            P2spd.x = acceleration;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            P2spd.x -= acceleration;
+            P2spd.x = -acceleration;
         }
         else
         {
-            //P2spd.x -= deceleration;
+            P2spd.x = 0;
         }
     }
 
