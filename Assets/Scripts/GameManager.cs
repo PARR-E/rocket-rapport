@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public event Func<float> PlayerSpdChanged;
     
     public Action<float> scoreChanged;
+    public Action<float> highScoreChanged;
     public Action<float> healthChanged;
     public Action<float> gameOver;
 
@@ -61,11 +62,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
+        //Update high score:
+        if(playerScore > highScore)
+        {
+            highScore = playerScore;
+        }
+        
         //Update the UI:
         playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
         playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
         
         scoreChanged?.Invoke(playerScore);
+        highScoreChanged?.Invoke(highScore);
         healthChanged?.Invoke(playerHP);
 
         //Handle Game Over:
@@ -73,12 +81,6 @@ public class GameManager : MonoBehaviour
         {
             //Debug.Log("GAME OVER");
             gameOver?.Invoke(playerScore);
-
-            //Update high score:
-            if(playerScore > highScore)
-            {
-                highScore = playerScore;
-            }
 
             //Save the high score!
             DatabaseManager.Instance.SavePlayerData("TestPlayer1", highScore);

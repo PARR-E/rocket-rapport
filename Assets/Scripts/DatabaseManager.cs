@@ -36,7 +36,7 @@ public class DatabaseManager : MonoBehaviour
         conn.CreateTable<PlayerData>();
         //Path on Windows is C:\Users\JaredCrow\AppData\LocalLow\DefaultCompany\Rocket-Rapport
         //Zheng recommends installing DB Browser for SQLite.
-        Debug.Log("Wrote to database at " + dbPath);
+        Debug.Log("Accessed to database at " + dbPath);
     }
     
     //Looks up rows in PlayerData where PlayerName matches, & returns the top match:

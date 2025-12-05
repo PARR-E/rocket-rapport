@@ -11,6 +11,7 @@ public class GameUIController : MonoBehaviour
 
     {
         GameManager.Instance.scoreChanged += UpdateAltitude;
+        GameManager.Instance.highScoreChanged += UpdateHighestAltitude;
         GameManager.Instance.healthChanged += UpdateHP;
         GameManager.Instance.gameOver += GameOver;
     }
@@ -32,6 +33,17 @@ public class GameUIController : MonoBehaviour
 
         textComponent.text = score.ToString("F5") + " AU";          //F5 rounds the number to 5 decimal places.
     }
+    //Change highest score:
+    void UpdateHighestAltitude(float score)
+    {
+        //Update the altitude UI:
+        TextMeshProUGUI textComponent;
+
+        Transform child1 = transform.GetChild(5);
+        textComponent = child1.GetComponent<TextMeshProUGUI>();
+
+        textComponent.text = score.ToString("F5") + " AU";          //F5 rounds the number to 5 decimal places.
+    }
     void UpdateHP(float hp)
     {
         //Update the altitude UI:
@@ -48,14 +60,14 @@ public class GameUIController : MonoBehaviour
         //Update the game over UI:
         TextMeshProUGUI textComponent;
 
-        Transform childGameOver = transform.GetChild(4);
+        Transform childGameOver = transform.GetChild(6);
         textComponent = childGameOver.GetComponent<TextMeshProUGUI>();
         textComponent.gameObject.SetActive(true);
 
-        childGameOver = transform.GetChild(5);
+        childGameOver = transform.GetChild(7);
         childGameOver.gameObject.SetActive(true);
 
-        childGameOver = transform.GetChild(6);
+        childGameOver = transform.GetChild(8);
         childGameOver.gameObject.SetActive(true);
     }
 }
