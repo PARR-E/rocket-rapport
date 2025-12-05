@@ -410,6 +410,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   playerScore: 0
   playerHP: 100
+  playerSpd: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

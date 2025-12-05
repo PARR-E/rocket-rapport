@@ -20,11 +20,11 @@ public class Player : MonoBehaviour
     Vector3 P2spd = new Vector3(0.0f, 0.0f, 0.0f);
     float altitude = 0.0f;
     float HP = 100.0f;
-    float spdMax = 1.0f;
+    float spdMax = 0.25f;
     float highestSpd = 0.0f;
     float lastHighestSpd = 0.0f;
-    float acceleration = 0.0025f;
-    float deceleration = 0.0005f;
+    float acceleration = 0.00075f;
+    //float deceleration = 0.00025f;
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
 
@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.AltitudeEvent += GetAltitude;
+        GameManager.Instance.PlayerSpdChanged += GetSpd;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,39 +45,58 @@ public class Player : MonoBehaviour
     //Update is called once per frame with the rigidbody physics:
     void Update()
     {
-        //Player 1 input:
+        //Player 1 input:   
         if (Input.GetKey(KeyCode.W))
         {
             P1spd.y -= acceleration;
         }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            P1spd.y += acceleration;
+        }
+        else
+        {
+            //P1spd.y -= deceleration;
+        }
+
         if (Input.GetKey(KeyCode.A))
         {
             P1spd.x += acceleration;
         }
-        if (Input.GetKey(KeyCode.S))
-        {
-            P1spd.y += acceleration;
-        }
-        if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             P1spd.x -= acceleration;
         }
+        else
+        {
+            //P1spd.x -= deceleration;
+        }
+
         //Player 2 input:
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            P1spd.y -= acceleration;
+            P2spd.y -= acceleration;
         }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            P2spd.y += acceleration;
+        }
+        else
+        {
+            //P2spd.y -= deceleration;
+        }
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            P1spd.x += acceleration;
+            P2spd.x += acceleration;
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
-            P1spd.y += acceleration;
+            P2spd.x -= acceleration;
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        else
         {
-            P1spd.x -= acceleration;
+            //P2spd.x -= deceleration;
         }
     }
 
@@ -84,12 +104,12 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         //Managing speed values:
-        SpdCheck(P1spd);
-        SpdCheck(P2spd);
+        SpdCheck();
 
         //Update player position, according to user input and gravity:
-        rb.MovePosition(rb.position + P1spd + P2spd);
+        rb.AddForce(P1spd * 10 + P2spd * 10);
         altitude = rb.position.y / 1000.0f;
+        Debug.Log("P1spd = " + P1spd + ", P2spd = " + P2spd);
 
         //Make sure the player never moves along the z-axis:
         Vector3 onZ = rb.position;
@@ -103,6 +123,8 @@ public class Player : MonoBehaviour
         //GameManager.Instance.target = rb.transform;
         ZoomCamera(rb.position.y);
 
+        //Make gravity weaker with elevation:
+        SetGravity(gravity);
 
         //Debug statements:
         //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
@@ -133,26 +155,46 @@ public class Player : MonoBehaviour
     void LateUpdate()
     {
         lastHighestSpd = highestSpd;
-        Debug.Log("lastHighestSpd = " + lastHighestSpd);
+        //Debug.Log("lastHighestSpd = " + lastHighestSpd);
     }
 
-    void SpdCheck(Vector3 _spd)
-    {
-        if (_spd.x > spdMax)
+    //Parameters don't effect the original variables in C#!!
+    void SpdCheck()
+    {   
+        //Player 1:
+        if (P1spd.x > spdMax)
         {
-            _spd.x = spdMax;
+            P1spd.x = spdMax;
         }
-        if (_spd.y > spdMax)
+        if (P1spd.y > spdMax)
         {
-            _spd.y = spdMax;
+            P1spd.y = spdMax;
         }
-        if (_spd.x < -spdMax)
+        if (P1spd.x < -spdMax)
         {
-            _spd.x = -spdMax;
+            P1spd.x = -spdMax;
         }
-        if (_spd.y < -spdMax)
+        if (P1spd.y < -spdMax)
         {
-            _spd.y = -spdMax;
+            P1spd.y = -spdMax;
+        }
+
+        //Player 2:
+        if (P2spd.x > spdMax)
+        {
+            P2spd.x = spdMax;
+        }
+        if (P2spd.y > spdMax)
+        {
+            P2spd.y = spdMax;
+        }
+        if (P2spd.x < -spdMax)
+        {
+            P2spd.x = -spdMax;
+        }
+        if (P2spd.y < -spdMax)
+        {
+            P2spd.y = -spdMax;
         }
     }
 
@@ -160,6 +202,12 @@ public class Player : MonoBehaviour
     Transform getTransform()
     {
         return rb.transform;
+    }
+
+    //Get the player's total spd:
+    float GetSpd()
+    {
+        return lastHighestSpd;
     }
 
     //Get the player's current altitude (score):
@@ -170,9 +218,17 @@ public class Player : MonoBehaviour
 
     //Change the rigidbody's gravity value:
     void SetGravity(float _gravity)
-    {
+    {   
         gravity = _gravity;
-        Physics.gravity = new Vector3(0, gravity, 0);
+        
+        float offsetGravity = gravity;// + altitude * 10.0f;
+
+        if(offsetGravity > 0.0f)
+        {
+            offsetGravity = 0.0f;
+        }
+        Physics.gravity = new Vector3(0, offsetGravity, 0);
+        //Debug.Log("Physics.gravity = " + Physics.gravity);
     }
 
     //Make camera zoom out as the rocket travels higher:

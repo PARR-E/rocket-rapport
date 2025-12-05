@@ -5,16 +5,19 @@ public class GameManager : MonoBehaviour
 {
     //Variables:
     public Transform target;                                //Equals the player.
-    public float smoothTime = 0.2f;
+    public float smoothTime = 0.01f;
     public Vector3 offset = new Vector3(0.0f, 0.0f, 0.0f);  //Distance between camera and player.
     
     private Vector3 velocity = Vector3.zero;
     public float playerScore = 0.0f;
     public float playerHP = 100.0f;
+    public float playerSpd = 0.0f;
 
     public static GameManager instance;                //This is used for the singleton.
 
     public event Func<float> AltitudeEvent;
+    public event Func<float> PlayerSpdChanged;
+    
     public Action<float> scoreChanged;
     public Action<float> healthChanged;
 
@@ -30,6 +33,8 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        Application.targetFrameRate = 60;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -43,6 +48,8 @@ public class GameManager : MonoBehaviour
     {   
         //Update the UI:
         playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
+        playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
+        
         scoreChanged?.Invoke(playerScore);
         healthChanged?.Invoke(playerHP);
         
@@ -52,13 +59,14 @@ public class GameManager : MonoBehaviour
     //Have the camera trail behind the player:
     void FixedUpdate()
     {   
-        Vector3 targetPos = new Vector3(transform.position.x, target.position.y, transform.position.z) + offset;
+        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd * 10.0f, transform.position.z) + offset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,
             targetPos,
             ref velocity,
-            smoothTime
+            smoothTime,
+            100.0f          //Max camera follow speed.
         );
     }
 }
