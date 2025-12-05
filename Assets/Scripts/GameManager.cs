@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     
     private Vector3 velocity = Vector3.zero;
     public float playerScore = 0.0f;
+    public float highScore = 0.0f;
+    public float GameHighScore { get; set; } = 0;
+
     public float playerHP = 100.0f;
     public float playerSpd = 0.0f;
 
@@ -42,6 +45,17 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         target = FindObjectOfType<Player>().transform;
+
+        //Initial database stuff:
+        PlayerData player = DatabaseManager.Instance.LoadPlayerData();  
+        if (player != null)
+        {
+            GameHighScore = player.HighScore;
+        }
+        else
+        {
+            GameHighScore = 0.0f;
+        }
     }
 
     // Update is called once per frame
@@ -57,8 +71,17 @@ public class GameManager : MonoBehaviour
         //Handle Game Over:
         if(playerHP < 0.0f)
         {
-            Debug.Log("GAME OVER");
+            //Debug.Log("GAME OVER");
             gameOver?.Invoke(playerScore);
+
+            //Update high score:
+            if(playerScore > highScore)
+            {
+                highScore = playerScore;
+            }
+
+            //Save the high score!
+            DatabaseManager.Instance.SavePlayerData("TestPlayer1", highScore);
         }
         
         //Debug.Log("Score = " + score);
