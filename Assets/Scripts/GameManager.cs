@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     
     public Action<float> scoreChanged;
     public Action<float> healthChanged;
+    public Action<float> gameOver;
 
     //Method for being a singleton:
     public static GameManager Instance {
@@ -52,6 +53,13 @@ public class GameManager : MonoBehaviour
         
         scoreChanged?.Invoke(playerScore);
         healthChanged?.Invoke(playerHP);
+
+        //Handle Game Over:
+        if(playerHP < 0.0f)
+        {
+            Debug.Log("GAME OVER");
+            gameOver?.Invoke(playerScore);
+        }
         
         //Debug.Log("Score = " + score);
     }

@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     float spdMax = 0.25f;
     float highestSpd = 0.0f;
     float lastHighestSpd = 0.0f;
-    float acceleration = 1.0f;
+    float acceleration = 2.0f;
     //float deceleration = 0.00025f;
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
@@ -45,58 +45,65 @@ public class Player : MonoBehaviour
     //Update is called once per frame with the rigidbody physics:
     void Update()
     {
-        //Player 1 input:   
-        if (Input.GetKey(KeyCode.W))
-        {
-            P1spd.y = -acceleration;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            P1spd.y = acceleration;
-        }
-        else
-        {
-            P1spd.y = 0;
-        }
+        if(HP > 0.0f){
+            
+            //Player 1 input:   
+            if (Input.GetKey(KeyCode.W))
+            {
+                P1spd.y = -acceleration;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                P1spd.y = acceleration;
+            }
+            else
+            {
+                P1spd.y = 0;
+            }
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            P1spd.x = acceleration;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            P1spd.x = -acceleration;
-        }
-        else
-        {
-            P1spd.x = 0;
-        }
+            if (Input.GetKey(KeyCode.A))
+            {
+                P1spd.x = acceleration;
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                P1spd.x = -acceleration;
+            }
+            else
+            {
+                P1spd.x = 0;
+            }
 
-        //Player 2 input:
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            P2spd.y = -acceleration;
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            P2spd.y = acceleration;
-        }
-        else
-        {
-            P2spd.y = 0;
-        }
+            //Player 2 input:
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                P2spd.y = -acceleration;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                P2spd.y = acceleration;
+            }
+            else
+            {
+                P2spd.y = 0;
+            }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            P2spd.x = acceleration;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            P2spd.x = -acceleration;
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                P2spd.x = acceleration;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                P2spd.x = -acceleration;
+            }
+            else
+            {
+                P2spd.x = 0;
+            }
         }
         else
         {
-            P2spd.x = 0;
+            HP = 0.0f;
         }
     }
 
@@ -109,7 +116,7 @@ public class Player : MonoBehaviour
         //Update player position, according to user input and gravity:
         rb.AddForce(P1spd * 10 + P2spd * 10);
         altitude = rb.position.y / 1000.0f;
-        Debug.Log("P1spd = " + P1spd + ", P2spd = " + P2spd);
+        //Debug.Log("P1spd = " + P1spd + ", P2spd = " + P2spd);
 
         //Make sure the player never moves along the z-axis:
         Vector3 onZ = rb.position;
@@ -138,7 +145,7 @@ public class Player : MonoBehaviour
         //Take damage:
         if(lastHighestSpd > 0.000001)
         {
-            HP -= lastHighestSpd * 10;
+            HP -= lastHighestSpd * 250;
         }
         
         GameManager.Instance.playerHP = HP;

@@ -12,6 +12,7 @@ public class GameUIController : MonoBehaviour
     {
         GameManager.Instance.scoreChanged += UpdateAltitude;
         GameManager.Instance.healthChanged += UpdateHP;
+        GameManager.Instance.gameOver += GameOver;
     }
 
     // Update is called once per frame
@@ -40,5 +41,21 @@ public class GameUIController : MonoBehaviour
         textComponent = child3.GetComponent<TextMeshProUGUI>();
 
         textComponent.text = hp.ToString("F2") + " HP";          //F2 rounds the number to 2 decimal places.
+    }
+
+    void GameOver(float score)
+    {
+        //Update the game over UI:
+        TextMeshProUGUI textComponent;
+
+        Transform childGameOver = transform.GetChild(4);
+        textComponent = childGameOver.GetComponent<TextMeshProUGUI>();
+        textComponent.gameObject.SetActive(true);
+
+        childGameOver = transform.GetChild(5);
+        childGameOver.gameObject.SetActive(true);
+
+        childGameOver = transform.GetChild(6);
+        childGameOver.gameObject.SetActive(true);
     }
 }
