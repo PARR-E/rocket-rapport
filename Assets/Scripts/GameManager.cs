@@ -63,9 +63,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {   
         //Update high score:
-        if(playerScore > highScore)
+        if(playerScore > GameHighScore)
         {
-            highScore = playerScore;
+            GameHighScore = playerScore;
         }
         
         //Update the UI:
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
         
         scoreChanged?.Invoke(playerScore);
-        highScoreChanged?.Invoke(highScore);
+        highScoreChanged?.Invoke(GameHighScore);
         healthChanged?.Invoke(playerHP);
 
         //Handle Game Over:
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
             gameOver?.Invoke(playerScore);
 
             //Save the high score!
-            DatabaseManager.Instance.SavePlayerData("TestPlayer1", highScore);
+            DatabaseManager.Instance.SavePlayerData("TestPlayer1", GameHighScore);
         }
         
         //Debug.Log("Score = " + score);
