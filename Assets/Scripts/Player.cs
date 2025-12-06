@@ -16,14 +16,14 @@ public class Player : MonoBehaviour
     //Initial variables:
 
     private Rigidbody rb;
-    Vector3 P1spd = new Vector3(0.0f, 0.0f, 0.0f);     //XYZ values are how far each coordinate will update each frame.
-    Vector3 P2spd = new Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 P1accel = new Vector3(0.0f, 0.0f, 0.0f);     //XYZ values are how far each coordinate will update each frame.
+    Vector3 P2accel = new Vector3(0.0f, 0.0f, 0.0f);
     float altitude = 0.0f;
     float HP = 100.0f;
-    float spdMax = 0.25f;
-    float highestSpd = 0.0f;
-    float lastHighestSpd = 0.0f;
-    float acceleration = 2.0f;
+    public float spdMax = 25.0f;
+    float signVelocity = 0.0f;                            //Will equal the current velocity of the ship, but negative if ship is going down.
+    float lastSignVelocity = 0.0f;                        //Will always equal what highestSpd was last frame.
+    public float acceleration = 10.0f;
     //float deceleration = 0.00025f;
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
@@ -50,55 +50,55 @@ public class Player : MonoBehaviour
             //Player 1 input:   
             if (Input.GetKey(KeyCode.W))
             {
-                P1spd.y = -acceleration;
+                P1accel.y = -acceleration;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                P1spd.y = acceleration;
+                P1accel.y = acceleration;
             }
             else
             {
-                P1spd.y = 0;
+                P1accel.y = 0;
             }
 
             if (Input.GetKey(KeyCode.A))
             {
-                P1spd.x = acceleration;
+                P1accel.x = acceleration;
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                P1spd.x = -acceleration;
+                P1accel.x = -acceleration;
             }
             else
             {
-                P1spd.x = 0;
+                P1accel.x = 0;
             }
 
             //Player 2 input:
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                P2spd.y = -acceleration;
+                P2accel.y = -acceleration;
             }
             else if (Input.GetKey(KeyCode.DownArrow))
             {
-                P2spd.y = acceleration;
+                P2accel.y = acceleration;
             }
             else
             {
-                P2spd.y = 0;
+                P2accel.y = 0;
             }
 
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                P2spd.x = acceleration;
+                P2accel.x = acceleration;
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                P2spd.x = -acceleration;
+                P2accel.x = -acceleration;
             }
             else
             {
-                P2spd.x = 0;
+                P2accel.x = 0;
             }
         }
         else
@@ -110,13 +110,13 @@ public class Player : MonoBehaviour
     //Handling player physics & movement. Is called once per frame with the rigidbody physics:
     void FixedUpdate()
     {
-        //Managing speed values:
-        SpdCheck();
-
         //Update player position, according to user input and gravity:
-        rb.AddForce(P1spd * 10 + P2spd * 10);
+        rb.AddForce(P1accel + P2accel);
         altitude = rb.position.y / 1000.0f;
         //Debug.Log("P1spd = " + P1spd + ", P2spd = " + P2spd);
+
+        //Managing speed values:
+        SpdCheck();
 
         //Make sure the player never moves along the z-axis:
         Vector3 onZ = rb.position;
@@ -124,7 +124,8 @@ public class Player : MonoBehaviour
         rb.MovePosition(onZ);
 
         //Update value used for collision damage:
-        highestSpd = Mathf.Max(Math.Abs(P1spd.x), Math.Abs(P1spd.y)) + Mathf.Max(Math.Abs(P2spd.x), Math.Abs(P2spd.y));
+        signVelocity = rb.linearVelocity.magnitude * Mathf.Sign(rb.linearVelocity.y); //Return a negative value if ship is going down.
+        Debug.Log("Current velocity: " + signVelocity);
 
         //Make the camera zoom out futher as the player gets frather from the starting area:
         //GameManager.Instance.target = rb.transform;
@@ -143,16 +144,16 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Take damage:
-        if(lastHighestSpd > 0.000001)
+        if(lastSignVelocity > 0.000001)
         {
-            HP -= lastHighestSpd * 250;
+            HP -= lastSignVelocity * 250;
         }
         
         GameManager.Instance.playerHP = HP;
         
         //Decrease the current speed:
-        P1spd = P1spd * 0.0f; //P1spd / 3;
-        P2spd = P2spd * 0.0f; //P2spd / 3;
+        P1accel = P1accel * 0.0f; //P1spd / 3;
+        P2accel = P2accel * 0.0f; //P2spd / 3;
 
         //Log the name of the object that was collided with:
         //Debug.Log("Collided with: " + collision.gameObject.name);
@@ -161,47 +162,16 @@ public class Player : MonoBehaviour
     //Happens last in a frame:
     void LateUpdate()
     {
-        lastHighestSpd = highestSpd;
+        lastSignVelocity = signVelocity;
         //Debug.Log("lastHighestSpd = " + lastHighestSpd);
     }
 
     //Parameters don't effect the original variables in C#!!
     void SpdCheck()
-    {   
-        //Player 1:
-        if (P1spd.x > spdMax)
+    {
+        if (rb.linearVelocity.magnitude > spdMax)
         {
-            P1spd.x = spdMax;
-        }
-        if (P1spd.y > spdMax)
-        {
-            P1spd.y = spdMax;
-        }
-        if (P1spd.x < -spdMax)
-        {
-            P1spd.x = -spdMax;
-        }
-        if (P1spd.y < -spdMax)
-        {
-            P1spd.y = -spdMax;
-        }
-
-        //Player 2:
-        if (P2spd.x > spdMax)
-        {
-            P2spd.x = spdMax;
-        }
-        if (P2spd.y > spdMax)
-        {
-            P2spd.y = spdMax;
-        }
-        if (P2spd.x < -spdMax)
-        {
-            P2spd.x = -spdMax;
-        }
-        if (P2spd.y < -spdMax)
-        {
-            P2spd.y = -spdMax;
+            rb.linearVelocity = rb.linearVelocity.normalized * spdMax;
         }
     }
 
@@ -214,7 +184,7 @@ public class Player : MonoBehaviour
     //Get the player's total spd:
     float GetSpd()
     {
-        return lastHighestSpd;
+        return lastSignVelocity;
     }
 
     //Get the player's current altitude (score):

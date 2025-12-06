@@ -10,8 +10,7 @@ public class GameManager : MonoBehaviour
     
     private Vector3 velocity = Vector3.zero;
     public float playerScore = 0.0f;
-    public float highScore = 0.0f;
-    public float GameHighScore { get; set; } = 0;
+    public float GameHighScore { get; set; } = 0;           //Will hold the current high score from the database.
 
     public float playerHP = 100.0f;
     public float playerSpd = 0.0f;
@@ -92,7 +91,7 @@ public class GameManager : MonoBehaviour
     //Have the camera trail behind the player:
     void FixedUpdate()
     {   
-        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd * 10.0f, transform.position.z) + offset;
+        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 3, transform.position.z) + offset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,

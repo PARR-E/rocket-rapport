@@ -531,7 +531,6 @@ MonoBehaviour:
   smoothTime: 0.2
   offset: {x: 0, y: 0, z: 0}
   playerScore: 0
-  highScore: 0
   playerHP: 100
   playerSpd: 0
 --- !u!114 &330585549
@@ -2576,6 +2575,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89b5088504f024c977239944f0c410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spdMax: 12
+  acceleration: 3
 --- !u!54 &2109188340
 Rigidbody:
   m_ObjectHideFlags: 0
