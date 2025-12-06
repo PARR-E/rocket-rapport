@@ -61,28 +61,32 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        //Update high score:
-        if(playerScore > GameHighScore)
-        {
-            GameHighScore = playerScore;
-        }
-        
-        //Update the UI:
-        playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
-        playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
-        
-        scoreChanged?.Invoke(playerScore);
-        highScoreChanged?.Invoke(GameHighScore);
         healthChanged?.Invoke(playerHP);
-
+        
         //Handle Game Over:
-        if(playerHP < 0.0f)
+        if(playerHP <= 0.0f)
         {
             //Debug.Log("GAME OVER");
             gameOver?.Invoke(playerScore);
 
             //Save the high score!
             DatabaseManager.Instance.SavePlayerData("TestPlayer1", GameHighScore);
+        }
+        //While player is alive:
+        else
+        {
+            //Update high score:
+            if(playerScore > GameHighScore)
+            {
+                GameHighScore = playerScore;
+            }
+            
+            //Update the UI:
+            playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
+            playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
+            
+            scoreChanged?.Invoke(playerScore);
+            highScoreChanged?.Invoke(GameHighScore);
         }
         
         //Debug.Log("Score = " + score);

@@ -20,10 +20,10 @@ public class Player : MonoBehaviour
     Vector3 P2accel = new Vector3(0.0f, 0.0f, 0.0f);
     float altitude = 0.0f;
     float HP = 100.0f;
-    public float spdMax = 25.0f;
+    public float maxVelocity = 12.0f;
     float signVelocity = 0.0f;                            //Will equal the current velocity of the ship, but negative if ship is going down.
     float lastSignVelocity = 0.0f;                        //Will always equal what highestSpd was last frame.
-    public float acceleration = 10.0f;
+    public float acceleration = 3.0f;
     //float deceleration = 0.00025f;
     float gravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
@@ -144,16 +144,19 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Take damage:
-        if(lastSignVelocity > 0.000001)
+        if(Math.Abs(lastSignVelocity) > acceleration)
         {
-            HP -= lastSignVelocity * 250;
+            HP -= Math.Abs(lastSignVelocity) * acceleration;
         }
-        
+
+        if(HP < 0.0f)
+        {
+            HP = 0.0f;
+        }
         GameManager.Instance.playerHP = HP;
         
         //Decrease the current speed:
-        P1accel = P1accel * 0.0f; //P1spd / 3;
-        P2accel = P2accel * 0.0f; //P2spd / 3;
+        
 
         //Log the name of the object that was collided with:
         //Debug.Log("Collided with: " + collision.gameObject.name);
@@ -169,9 +172,9 @@ public class Player : MonoBehaviour
     //Parameters don't effect the original variables in C#!!
     void SpdCheck()
     {
-        if (rb.linearVelocity.magnitude > spdMax)
+        if (rb.linearVelocity.magnitude > maxVelocity)
         {
-            rb.linearVelocity = rb.linearVelocity.normalized * spdMax;
+            rb.linearVelocity = rb.linearVelocity.normalized * maxVelocity;
         }
     }
 
