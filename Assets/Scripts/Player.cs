@@ -109,12 +109,12 @@ public class Player : MonoBehaviour
         //If player is outside the safe zone, start spawning hazards:
         if(rb.position.y > 3.0)
         {    
-            float upperChance = 100.0f - altitude * 300.0f;
-            if(upperChance < 5.0f)
+            float upperChance = 100.0f - altitude * 250.0f;     //Increase rightmost value to increase how quickly difficulty increases.
+            if(upperChance < 10.0f)
             {
-                upperChance = 5.0f;
+                upperChance = 10.0f;
             }
-            Debug.Log("upperChance = " + upperChance);
+            //Debug.Log("upperChance = " + upperChance);
 
             float asteroidChance = UnityEngine.Random.Range(0f, upperChance);
             //Spawn an asteroid:
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
         SetGravity();
 
         //Debug statements:
-        //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
+        Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
         //Debug.Log("Gravity = " + Physics.gravity);
         //Debug.Log(rb.position);
     }
@@ -170,7 +170,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Take damage:
-        if(Math.Abs(lastSignVelocity) > acceleration)
+        if(Math.Abs(lastSignVelocity) > acceleration - 1.0)
         {
             HP -= Math.Abs(lastSignVelocity) * acceleration * 0.5f;
         }
