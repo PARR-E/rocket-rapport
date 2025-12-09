@@ -29,7 +29,7 @@ public class Obstacle : MonoBehaviour
         float y = Random.Range(0f, 1f);
 
         //Set random rotation speed:
-        rotationSpd = Random.Range(-maxRotationSpd, maxRotationSpd);
+        rotationSpd = Random.Range(1.0f, maxRotationSpd);
 
         //Debug.Log("Player Y is " + playerY);
 
@@ -62,7 +62,7 @@ public class Obstacle : MonoBehaviour
         float bottomEdge = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0f, zDist)).y;
         bottomEdge -= sizeMax * 0.5f + padding;
 
-        if(rb.position.y < bottomEdge || Mathf.Abs(rb.position.z) > 0.5)
+        if(rb.position.y < bottomEdge || Mathf.Abs(rb.position.z) > 0.5 || Mathf.Abs(rb.position.x) > 105)
         {
             Destroy(this.gameObject);
         }
