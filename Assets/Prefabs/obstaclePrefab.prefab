@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f01ea5270ab04439adc3fc774b72f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bottomEdgeOffset: 1.25
 --- !u!136 &5468003744560595679
 CapsuleCollider:
   m_ObjectHideFlags: 0

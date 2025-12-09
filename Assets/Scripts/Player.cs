@@ -109,7 +109,7 @@ public class Player : MonoBehaviour
         //If player is outside the safe zone, start spawning hazards:
         if(rb.position.y > 3.0)
         {    
-            float upperChance = 100.0f - altitude * 400.0f;
+            float upperChance = 100.0f - altitude * 300.0f;
             if(upperChance < 5.0f)
             {
                 upperChance = 5.0f;
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
         //Take damage:
         if(Math.Abs(lastSignVelocity) > acceleration)
         {
-            HP -= Math.Abs(lastSignVelocity) * acceleration * 0.75f;
+            HP -= Math.Abs(lastSignVelocity) * acceleration * 0.5f;
         }
 
         HandleDamage();

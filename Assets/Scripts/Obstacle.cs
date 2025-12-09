@@ -6,6 +6,7 @@ public class Obstacle : MonoBehaviour
     //Initial variables:
     private Rigidbody rb;
     float playerY = 0.0f;
+    public float bottomEdgeOffset = 1.0f;
 
     
 
@@ -32,7 +33,13 @@ public class Obstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(rb.position.y < Camera.main.transform.position.y - Camera.main.orthographicSize * 2.5f)
+        //Destroy this obstacle when off screen:
+        float zDist = Mathf.Abs(Camera.main.transform.position.z);
+        float padding = 1.0f;
+        float bottomEdge = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0f, zDist)).y;
+        bottomEdge += padding;
+
+        if(rb.position.y < bottomEdge)
         {
             Destroy(this.gameObject);
         }
