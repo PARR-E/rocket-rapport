@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
     //Have the camera trail behind the player:
     void FixedUpdate()
     {   
-        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 3, transform.position.z) + offset;
+        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 2, transform.position.z) + offset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,

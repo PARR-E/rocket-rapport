@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     float lastSignVelocity = 0.0f;                        //Will always equal what highestSpd was last frame.
     public float acceleration = 3.0f;
     //float deceleration = 0.00025f;
-    float gravity = -2.0f;                       //The initial low-gravity value.
+    float initialGravity = -2.0f;                       //The initial low-gravity value.
                                                  //(The Moon's gravity is 1.62 m/s^2)
 
     //Subscribers:
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();                 //Initialize rigidbody variable.
-        SetGravity(gravity);                     //Set the initial gravity.
+        SetGravity();                     //Set the initial gravity.
     }
     
     //Update is called once per frame with the rigidbody physics:
@@ -125,14 +125,22 @@ public class Player : MonoBehaviour
 
         //Update value used for collision damage:
         signVelocity = rb.linearVelocity.magnitude * Mathf.Sign(rb.linearVelocity.y); //Return a negative value if ship is going down.
-        Debug.Log("Current velocity: " + signVelocity);
+        //Debug.Log("Current velocity: " + signVelocity);
 
         //Make the camera zoom out futher as the player gets frather from the starting area:
         //GameManager.Instance.target = rb.transform;
-        ZoomCamera(rb.position.y);
+        
+        //Zoom out the camera, & if the player is out of bounds, subtract HP.
+        float offScreen = ZoomCamera(rb.position.y);
+        if (offScreen != 0.0f)
+        {   
+            HP -= offScreen / 2;
+            HandleDamage();
+            Debug.Log("Out of bounds by " + offScreen);
+        }
 
         //Make gravity weaker with elevation:
-        SetGravity(gravity);
+        SetGravity();
 
         //Debug statements:
         //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
@@ -149,11 +157,7 @@ public class Player : MonoBehaviour
             HP -= Math.Abs(lastSignVelocity) * acceleration;
         }
 
-        if(HP < 0.0f)
-        {
-            HP = 0.0f;
-        }
-        GameManager.Instance.playerHP = HP;
+        HandleDamage();
         
         //Decrease the current speed:
         
@@ -197,11 +201,9 @@ public class Player : MonoBehaviour
     }
 
     //Change the rigidbody's gravity value:
-    void SetGravity(float _gravity)
-    {   
-        gravity = _gravity;
-        
-        float offsetGravity = gravity;// + altitude * 10.0f;
+    void SetGravity()
+    {     
+        float offsetGravity = initialGravity + altitude * 4.0f;
 
         if(offsetGravity > 0.0f)
         {
@@ -211,13 +213,69 @@ public class Player : MonoBehaviour
         //Debug.Log("Physics.gravity = " + Physics.gravity);
     }
 
-    //Make camera zoom out as the rocket travels higher:
-    void ZoomCamera(float _playerY)
+    //Update the Hp variable in GameManager:
+    void HandleDamage()
     {
+        if(HP < 0.0f)
+        {
+            HP = 0.0f;
+        }
+        GameManager.Instance.playerHP = HP;
+    }
+
+    //Structure used for finding how far offscreen the player is:
+    public struct OffscreenDistance
+    {
+        public float left;
+        public float right;
+        public float top;
+        public float bottom;
+    }
+
+    //Make camera zoom out as the rocket travels higher:
+    float ZoomCamera(float _playerY)
+    {
+        //Have camera zoom out as the rocket gains more distance:
+        float offsetCamera = -10f - _playerY / 10;
+        float offsetCameraLimit = -100.0f;
+        if(offsetCamera < offsetCameraLimit)
+        {
+            offsetCamera = offsetCameraLimit;
+        }
+        //Debug.Log("offset = " + offsetCamera);
+        
+        //Apply camera zoom:
         GameManager.Instance.transform.position = new Vector3(
             GameManager.Instance.transform.position.x, 
             GameManager.Instance.transform.position.y, 
-            -10f - _playerY / 10
+            offsetCamera
         );
+
+        //Variable for finding ig offscreen:
+        OffscreenDistance d = new OffscreenDistance();
+        Vector3 vp = Camera.main.WorldToViewportPoint(rb.position);
+
+        //Return a nonzero value if player is out of bounds:
+        d.left   = vp.x < 0f ? -vp.x : 0f;
+        d.right  = vp.x > 1f ? vp.x - 1f : 0f;
+        d.bottom = vp.y < 0f ? -vp.y : 0f;
+        d.top    = vp.y > 1f ? vp.y - 1f : 0f;
+
+        if(d.right > 0.0f)
+        {
+            return d.right;
+        }
+        else if(d.left > 0.0f)
+        {
+            return d.left;
+        }
+        else if(d.bottom > 0.0f)
+        {
+            return d.bottom;
+        }
+        else
+        {
+            return 0.0f;
+        }
     }
 }
