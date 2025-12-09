@@ -533,7 +533,6 @@ MonoBehaviour:
   playerScore: 0
   playerHP: 100
   playerSpd: 0
-  obstaclePrefab: {fileID: 1201383571894498237, guid: f0b02c2d4a42c1447b4d66a179c3a4b2, type: 3}
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2449,7 +2448,7 @@ Transform:
   m_GameObject: {fileID: 2109188337}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2468,6 +2467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89b5088504f024c977239944f0c410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstaclePrefab: {fileID: 1201383571894498237, guid: f0b02c2d4a42c1447b4d66a179c3a4b2, type: 3}
   maxVelocity: 12
   acceleration: 3
 --- !u!54 &2109188340

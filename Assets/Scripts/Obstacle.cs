@@ -40,7 +40,25 @@ public class Obstacle : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.AddForce(new Vector3(-0.2f, -0.01f, 0.0f));
+        float forceMaxX = 0.005f + playerY / 1500;
+        float forceMaxY = 0.01f + playerY / 500;
+
+        if(forceMaxX > 0.25f)
+        {
+            forceMaxX = 0.25f;
+            Debug.Log("ForceMaxX is max");
+        }
+        if(forceMaxY > 2.5f)
+        {
+            forceMaxY = 2.5f;
+        }
+
+        rb.AddForce(new Vector3(Random.Range(-0.02f, 0.02f), Random.Range(0.001f, -forceMaxY), 0.0f));
+
+        //Make sure the obstacles never move along the z-axis:
+        Vector3 onZ = rb.position;
+        onZ.z = 0.0f;
+        rb.MovePosition(onZ);
     }
 
     void UpdatePlayerY(float playerScore)

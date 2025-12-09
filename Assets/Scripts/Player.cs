@@ -107,16 +107,16 @@ public class Player : MonoBehaviour
         }
 
         //If player is outside the safe zone, start spawning hazards:
-        if(rb.position.y > 5.0)
+        if(rb.position.y > 3.0)
         {    
-            float upperChance = 100.0f - altitude * 500.0f;
-            if(upperChance < 10.0f)
+            float upperChance = 100.0f - altitude * 400.0f;
+            if(upperChance < 5.0f)
             {
-                upperChance = 10.0f;
+                upperChance = 5.0f;
             }
             Debug.Log("upperChance = " + upperChance);
 
-            float asteroidChance = UnityEngine.Random.Range(0f, 100.0f);
+            float asteroidChance = UnityEngine.Random.Range(0f, upperChance);
             //Spawn an asteroid:
             if(asteroidChance < 1.0f)
             {
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
         //Take damage:
         if(Math.Abs(lastSignVelocity) > acceleration)
         {
-            HP -= Math.Abs(lastSignVelocity) * acceleration;
+            HP -= Math.Abs(lastSignVelocity) * acceleration * 0.75f;
         }
 
         HandleDamage();
