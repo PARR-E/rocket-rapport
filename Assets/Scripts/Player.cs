@@ -136,16 +136,16 @@ public class Player : MonoBehaviour
         {   
             HP -= offScreen / 2;
             HandleDamage();
-            Debug.Log("Out of bounds by " + offScreen);
+            //Debug.Log("Out of bounds by " + offScreen);
         }
 
         //Make gravity weaker with elevation:
         SetGravity();
 
         //Debug statements:
-        //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
+        Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
         //Debug.Log("Gravity = " + Physics.gravity);
-        //Debug.Log(P1spd);
+        //Debug.Log(rb.position);
     }
 
     //Handling collisions:
@@ -276,6 +276,16 @@ public class Player : MonoBehaviour
         else
         {
             return 0.0f;
+        }
+    }
+
+    //Be sure to unsubscribe on a scene reload:
+    void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AltitudeEvent -= GetAltitude;
+            GameManager.Instance.PlayerSpdChanged -= GetSpd;
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public float playerSpd = 0.0f;
 
     public static GameManager instance;                //This is used for the singleton.
+    public GameObject obstaclePrefab;                   //Will point to the obstacle prefab in the Unity Inspector.
 
     public event Func<float> AltitudeEvent;
     public event Func<float> PlayerSpdChanged;
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
     public Action<float> highScoreChanged;
     public Action<float> healthChanged;
     public Action<float> gameOver;
+    
 
     //Method for being a singleton:
     public static GameManager Instance {
@@ -56,6 +59,8 @@ public class GameManager : MonoBehaviour
         {
             GameHighScore = 0.0f;
         }
+
+        GameObject obstacle = Instantiate<GameObject>(obstaclePrefab);
     }
 
     // Update is called once per frame
@@ -75,6 +80,15 @@ public class GameManager : MonoBehaviour
         //While player is alive:
         else
         {
+            //Spawn hazards:
+            if(playerScore > 1.0f)
+            {
+                Debug.Log("Spawning hazards now!");
+                //Spawn an obstacle:
+                //GameObject obstacle = Instantiate<GameObject>(obstaclePrefab);    //Adds an object based on the obstacle prefab.
+            }
+
+
             //Update high score:
             if(playerScore > GameHighScore)
             {

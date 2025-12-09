@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System;
 
@@ -69,5 +70,17 @@ public class GameUIController : MonoBehaviour
 
         childGameOver = transform.GetChild(8);
         childGameOver.gameObject.SetActive(true);
+    }
+
+    //Be sure to unsubscribe on a scene reload:
+    void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.scoreChanged -= UpdateAltitude;
+            GameManager.Instance.highScoreChanged -= UpdateHighestAltitude;
+            GameManager.Instance.healthChanged -= UpdateHP;
+            GameManager.Instance.gameOver -= GameOver;
+        }
     }
 }
