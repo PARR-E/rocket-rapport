@@ -14,7 +14,7 @@ using System;
 public class Player : MonoBehaviour
 {
     //Initial variables:
-
+    public GameObject obstaclePrefab;                   //Will point to the obstacle prefab in the Unity Inspector.
     private Rigidbody rb;
     Vector3 P1accel = new Vector3(0.0f, 0.0f, 0.0f);     //XYZ values are how far each coordinate will update each frame.
     Vector3 P2accel = new Vector3(0.0f, 0.0f, 0.0f);
@@ -105,6 +105,24 @@ public class Player : MonoBehaviour
         {
             HP = 0.0f;
         }
+
+        //If player is outside the safe zone, start spawning hazards:
+        if(rb.position.y > 5.0)
+        {    
+            float upperChance = 100.0f - altitude * 500.0f;
+            if(upperChance < 10.0f)
+            {
+                upperChance = 10.0f;
+            }
+            Debug.Log("upperChance = " + upperChance);
+
+            float asteroidChance = UnityEngine.Random.Range(0f, 100.0f);
+            //Spawn an asteroid:
+            if(asteroidChance < 1.0f)
+            {
+                GameObject obstacle = Instantiate<GameObject>(obstaclePrefab);
+            }
+        }
     }
 
     //Handling player physics & movement. Is called once per frame with the rigidbody physics:
@@ -143,7 +161,7 @@ public class Player : MonoBehaviour
         SetGravity();
 
         //Debug statements:
-        Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
+        //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
         //Debug.Log("Gravity = " + Physics.gravity);
         //Debug.Log(rb.position);
     }
