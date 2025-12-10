@@ -66,10 +66,12 @@ public class GameUIController : MonoBehaviour
         textComponent.gameObject.SetActive(true);
 
         childGameOver = transform.GetChild(8);
+        textComponent = childGameOver.GetComponent<TextMeshProUGUI>();
         childGameOver.gameObject.SetActive(true);
+        textComponent.text = "High Score " + score.ToString("F5") + " AU Has Been Saved";
 
-        childGameOver = transform.GetChild(9);
-        childGameOver.gameObject.SetActive(true);
+        //childGameOver = transform.GetChild(9);
+        //childGameOver.gameObject.SetActive(true);
     }
 
     //Be sure to unsubscribe on a scene reload:

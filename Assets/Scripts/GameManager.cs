@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
             gameOver?.Invoke(playerScore);
 
             //Save the high score!
-            DatabaseManager.Instance.SavePlayerData("TestPlayer1", GameHighScore);
+            DatabaseManager.Instance.SavePlayerData("Player", GameHighScore);
         }
         //While player is alive:
         else

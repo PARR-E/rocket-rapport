@@ -273,7 +273,7 @@ public class Player : MonoBehaviour
         );
 
         //Update background accordingly:
-        GameManager.Instance.moveBG?.Invoke(GameManager.Instance.transform.position.y, GameManager.Instance.transform.position.z);
+        //GameManager.Instance.moveBG?.Invoke(GameManager.Instance.transform.position.y, GameManager.Instance.transform.position.z);
 
         //Variable for finding ig offscreen:
         OffscreenDistance d = new OffscreenDistance();
