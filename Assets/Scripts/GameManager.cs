@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     public Action<float> changeHighScoreUI;
     public Action<float> healthChanged;
     public Action<float, float> gameOver;
-    public Action<float, float> moveBG;
+    public Action<float> moveBG;
     
 
     //Method for being a singleton:
@@ -105,13 +105,18 @@ public class GameManager : MonoBehaviour
         {
             Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 2, transform.position.z) + offset;
 
-        transform.position = Vector3.SmoothDamp(
-            transform.position,
-            targetPos,
-            ref velocity,
-            smoothTime,
-            100.0f          //Max camera follow speed.
-        );
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                targetPos,
+                ref velocity,
+                smoothTime,
+                100.0f          //Max camera follow speed.
+            );
         }
+
+        
+        //Update background to stay with the camera::
+        moveBG?.Invoke(transform.position.y);
+        //Debug.Log("Camera z = " + transform.position.z);
     }
 }

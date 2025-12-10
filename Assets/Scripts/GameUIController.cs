@@ -79,14 +79,11 @@ public class GameUIController : MonoBehaviour
         }
 
         //Remove all asteroids:
-        GameObject[] obscatleArray = GameObject.FindGameObjectsWithTag("Obstacle");
+        /*GameObject[] obscatleArray = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (GameObject tempGO in obscatleArray)
         {
             Destroy(tempGO);
-        }
-
-        //childGameOver = transform.GetChild(9);
-        //childGameOver.gameObject.SetActive(true);
+        }*/
     }
 
     //Be sure to unsubscribe on a scene reload:

@@ -164,7 +164,7 @@ public class Player : MonoBehaviour
         SetGravity();
 
         //Debug statements:
-        Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
+        //Debug.Log("Player pos: (" + rb.position.x + ", " + rb.position.y + ", " + rb.position.z + ")");
         //Debug.Log("Gravity = " + Physics.gravity);
         //Debug.Log(rb.position);
     }
@@ -271,9 +271,6 @@ public class Player : MonoBehaviour
             GameManager.Instance.transform.position.y, 
             offsetCamera
         );
-
-        //Update background accordingly:
-        //GameManager.Instance.moveBG?.Invoke(GameManager.Instance.transform.position.y, GameManager.Instance.transform.position.z);
 
         //Variable for finding ig offscreen:
         OffscreenDistance d = new OffscreenDistance();
