@@ -24,7 +24,7 @@ public class BackgroundController : MonoBehaviour
     void UpdateBG(float newY)
     {
         transform.position = new Vector3(0.0f, newY, 0.0f);
-        Debug.Log("BG should be moving");
+        //Debug.Log("BG should be moving");
     }
 
     //Cleanly unsubscribe:
