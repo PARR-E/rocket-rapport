@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public Action<float> changeScoreUI;
     public Action<float> changeHighScoreUI;
     public Action<float> healthChanged;
-    public Action<float> gameOver;
+    public Action<float, float> gameOver;
     public Action<float, float> moveBG;
     
 
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         if(playerHP <= 0.0f)
         {
             //Debug.Log("GAME OVER");
-            gameOver?.Invoke(playerScore);
+            gameOver?.Invoke(playerScore, GameHighScore);
 
             //Save the high score!
             DatabaseManager.Instance.SavePlayerData("Player", GameHighScore);
@@ -101,7 +101,9 @@ public class GameManager : MonoBehaviour
     //Have the camera trail behind the player:
     void FixedUpdate()
     {   
-        Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 2, transform.position.z) + offset;
+        if(playerHP > 0.0)
+        {
+            Vector3 targetPos = new Vector3(transform.position.x, target.position.y + playerSpd / 2, transform.position.z) + offset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position,
@@ -110,5 +112,6 @@ public class GameManager : MonoBehaviour
             smoothTime,
             100.0f          //Max camera follow speed.
         );
+        }
     }
 }

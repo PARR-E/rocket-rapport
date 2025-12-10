@@ -56,7 +56,7 @@ public class GameUIController : MonoBehaviour
         textComponent.text = hp.ToString("F2") + " HP";          //F2 rounds the number to 2 decimal places.
     }
 
-    void GameOver(float score)
+    void GameOver(float score, float highScore)
     {
         //Update the game over UI:
         TextMeshProUGUI textComponent;
@@ -68,7 +68,22 @@ public class GameUIController : MonoBehaviour
         childGameOver = transform.GetChild(8);
         textComponent = childGameOver.GetComponent<TextMeshProUGUI>();
         childGameOver.gameObject.SetActive(true);
-        textComponent.text = "High Score " + score.ToString("F5") + " AU Has Been Saved";
+        
+        if(score > highScore)
+        {
+            textComponent.text = "New High Score " + score.ToString("F5") + " AU Has Been Saved!";
+        }
+        else
+        {
+            textComponent.text = "High score remains undefeated...";
+        }
+
+        //Remove all asteroids:
+        GameObject[] obscatleArray = GameObject.FindGameObjectsWithTag("Obstacle");
+        foreach (GameObject tempGO in obscatleArray)
+        {
+            Destroy(tempGO);
+        }
 
         //childGameOver = transform.GetChild(9);
         //childGameOver.gameObject.SetActive(true);
