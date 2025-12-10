@@ -29,7 +29,7 @@ public class GameUIController : MonoBehaviour
         //Update the altitude UI:
         TextMeshProUGUI textComponent;
 
-        Transform child1 = transform.GetChild(1);
+        Transform child1 = transform.GetChild(2);
         textComponent = child1.GetComponent<TextMeshProUGUI>();
 
         textComponent.text = score.ToString("F5") + " AU";          //F5 rounds the number to 5 decimal places.
@@ -40,7 +40,7 @@ public class GameUIController : MonoBehaviour
         //Update the altitude UI:
         TextMeshProUGUI textComponent;
 
-        Transform child1 = transform.GetChild(5);
+        Transform child1 = transform.GetChild(6);
         textComponent = child1.GetComponent<TextMeshProUGUI>();
 
         textComponent.text = score.ToString("F5") + " AU";          //F5 rounds the number to 5 decimal places.
@@ -50,7 +50,7 @@ public class GameUIController : MonoBehaviour
         //Update the altitude UI:
         TextMeshProUGUI textComponent;
 
-        Transform child3 = transform.GetChild(3);
+        Transform child3 = transform.GetChild(4);
         textComponent = child3.GetComponent<TextMeshProUGUI>();
 
         textComponent.text = hp.ToString("F2") + " HP";          //F2 rounds the number to 2 decimal places.
@@ -61,14 +61,14 @@ public class GameUIController : MonoBehaviour
         //Update the game over UI:
         TextMeshProUGUI textComponent;
 
-        Transform childGameOver = transform.GetChild(6);
+        Transform childGameOver = transform.GetChild(7);
         textComponent = childGameOver.GetComponent<TextMeshProUGUI>();
         textComponent.gameObject.SetActive(true);
 
-        childGameOver = transform.GetChild(7);
+        childGameOver = transform.GetChild(8);
         childGameOver.gameObject.SetActive(true);
 
-        childGameOver = transform.GetChild(8);
+        childGameOver = transform.GetChild(9);
         childGameOver.gameObject.SetActive(true);
     }
 

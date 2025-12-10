@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public Action<float> changeHighScoreUI;
     public Action<float> healthChanged;
     public Action<float> gameOver;
+    public Action<float, float> moveBG;
     
 
     //Method for being a singleton:

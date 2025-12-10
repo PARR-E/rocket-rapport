@@ -272,6 +272,9 @@ public class Player : MonoBehaviour
             offsetCamera
         );
 
+        //Update background accordingly:
+        GameManager.Instance.moveBG?.Invoke(GameManager.Instance.transform.position.y, GameManager.Instance.transform.position.z);
+
         //Variable for finding ig offscreen:
         OffscreenDistance d = new OffscreenDistance();
         Vector3 vp = Camera.main.WorldToViewportPoint(rb.position);
