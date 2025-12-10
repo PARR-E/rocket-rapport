@@ -7,8 +7,8 @@ public class Obstacle : MonoBehaviour
     private Rigidbody rb;
     float playerY = 0.0f;
     public float bottomEdgeOffset = 1.0f;
-    float rotationSpd = 0.0f;
-    public float maxRotationSpd = 20.0f;
+    float rotationSpd = 0.01f;
+    public float maxRotationSpd = 4.0f;
     float sizeMax = 1.0f;
     bool sizeChanged = false;
 
@@ -23,13 +23,14 @@ public class Obstacle : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();                 //Initialize rigidbody variable.
+        rb = GetComponent<Rigidbody>();                         //Initialize rigidbody variable.
+        rb.constraints = RigidbodyConstraints.FreezePositionZ;  //Make sure the obstacles never move along the z-axis.
 
         float x = Random.Range(0f, 1f);
         float y = Random.Range(0f, 1f);
 
         //Set random rotation speed:
-        rotationSpd = Random.Range(1.0f, maxRotationSpd);
+        rotationSpd = Random.Range(-maxRotationSpd, maxRotationSpd);
 
         //Debug.Log("Player Y is " + playerY);
 
@@ -71,12 +72,7 @@ public class Obstacle : MonoBehaviour
     void FixedUpdate()
     {
         //Add rotation too:
-        rb.AddTorque(new Vector3(rotationSpd, 0.0f, 0.0f));
-
-        //Make sure the obstacles never move along the z-axis:
-        //Vector3 onZ = rb.position;
-        //onZ.z = 0.0f;
-        rb.position = new Vector3(rb.position.x, rb.position.y, 0.0f);
+        rb.AddTorque(new Vector3(0.0f, 0.0f, rotationSpd));
 
 
         float forceMaxX = 0.005f + playerY / 1500;

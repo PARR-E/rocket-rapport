@@ -38,7 +38,8 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();                 //Initialize rigidbody variable.
+        rb = GetComponent<Rigidbody>();                         //Initialize rigidbody variable.
+        rb.constraints = RigidbodyConstraints.FreezePositionZ;  //Make sure the obstacles never move along the z-axis.
         SetGravity();                     //Set the initial gravity.
     }
     
@@ -137,9 +138,9 @@ public class Player : MonoBehaviour
         SpdCheck();
 
         //Make sure the player never moves along the z-axis:
-        Vector3 onZ = rb.position;
+        /*Vector3 onZ = rb.position;
         onZ.z = 0.0f;
-        rb.MovePosition(onZ);
+        rb.MovePosition(onZ);*/
 
         //Update value used for collision damage:
         signVelocity = rb.linearVelocity.magnitude * Mathf.Sign(rb.linearVelocity.y); //Return a negative value if ship is going down.

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bottomEdgeOffset: 1.25
-  maxRotationSpd: 20
+  maxRotationSpd: 4
 --- !u!136 &5468003744560595679
 CapsuleCollider:
   m_ObjectHideFlags: 0
