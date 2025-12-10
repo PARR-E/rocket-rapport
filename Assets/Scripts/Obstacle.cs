@@ -8,11 +8,14 @@ public class Obstacle : MonoBehaviour
     float playerY = 0.0f;
     public float bottomEdgeOffset = 1.0f;
     float rotationSpd = 0.01f;
-    public float maxRotationSpd = 4.0f;
+    public float maxRotationSpd = 15.0f;
     float sizeMax = 1.0f;
     bool sizeChanged = false;
-
-    
+    bool forceChanged = false;
+    float forceMaxX;
+    float forceMaxY;
+    float forceX;
+    float forceY;
 
     //Subscribers:
     private void OnEnable()
@@ -45,7 +48,7 @@ public class Obstacle : MonoBehaviour
         //Increase size here because this is where playerY is gotten:
         if(!sizeChanged){
             sizeMax = 1.5f + playerY / 90.0f;
-            Debug.Log("sizeMax = " + sizeMax);
+            //Debug.Log("sizeMax = " + sizeMax);
             if (sizeMax > 20.0f)
             {
                 sizeMax = 20.0f;
@@ -71,29 +74,45 @@ public class Obstacle : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Add rotation too:
-        rb.AddTorque(new Vector3(0.0f, 0.0f, rotationSpd));
+        //Add force:
+        if(!forceChanged){
+            forceMaxX = 0.005f + playerY / 1500;
+            forceMaxY = 0.01f + playerY / 2000;
 
+            if(forceMaxX > 0.25f)
+            {
+                forceMaxX = 0.25f;
+            }
+            if(forceMaxY > 0.02)
+            {
+                forceMaxY = 0.02f;
+                //Debug.Log("ForceMaxY is max");
+            }
 
-        float forceMaxX = 0.005f + playerY / 1500;
-        float forceMaxY = 0.01f + playerY / 2000;
+            forceX = Random.Range(-0.02f, 0.02f);
+            forceY = Random.Range(0.0005f, -forceMaxY);
+            rb.AddForce(new Vector3(forceX, forceY, 0.0f));
 
-        if(forceMaxX > 0.25f)
-        {
-            forceMaxX = 0.25f;
+            //Add rotation too:
+            rb.AddTorque(new Vector3(0.0f, 0.0f, rotationSpd));
+
+            forceChanged = true;
         }
-        if(forceMaxY > 0.02)
-        {
-            forceMaxY = 0.02f;
-            //Debug.Log("ForceMaxY is max");
-        }
-
-        rb.AddForce(new Vector3(Random.Range(-0.02f, 0.02f), Random.Range(0.0005f, -forceMaxY), 0.0f));
     }
 
+    //Update the PlayerY variable:
     void UpdatePlayerY(float playerScore)
     {   
         //Altitude equals player position y divided by 1000, so need to turn that back into a y-value:
         playerY = playerScore * 1000;
+    }
+
+    //Be sure to unsubscribe on a scene reload:
+    void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.scoreChanged -= UpdatePlayerY;
+        }
     }
 }

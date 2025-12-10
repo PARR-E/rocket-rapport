@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
     public event Func<float> PlayerSpdChanged;
     
     public Action<float> scoreChanged;
-    public Action<float> highScoreChanged;
+    public Action<float> changeScoreUI;
+    public Action<float> changeHighScoreUI;
     public Action<float> healthChanged;
     public Action<float> gameOver;
     
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {   
         healthChanged?.Invoke(playerHP);
+        scoreChanged?.Invoke(playerScore);
         
         //Handle Game Over:
         if(playerHP <= 0.0f)
@@ -88,8 +90,8 @@ public class GameManager : MonoBehaviour
             playerScore = AltitudeEvent?.Invoke() ?? 0f;    //Use the null-coalescing operator (??) to supply a fallback float if nothing is returned.
             playerSpd = PlayerSpdChanged?.Invoke() ?? 0f;
             
-            scoreChanged?.Invoke(playerScore);
-            highScoreChanged?.Invoke(GameHighScore);
+            changeScoreUI?.Invoke(playerScore);
+            changeHighScoreUI?.Invoke(GameHighScore);
         }
         
         //Debug.Log("Score = " + score);

@@ -11,8 +11,8 @@ public class GameUIController : MonoBehaviour
     void Start()
 
     {
-        GameManager.Instance.scoreChanged += UpdateAltitude;
-        GameManager.Instance.highScoreChanged += UpdateHighestAltitude;
+        GameManager.Instance.changeScoreUI += UpdateAltitude;
+        GameManager.Instance.changeHighScoreUI += UpdateHighestAltitude;
         GameManager.Instance.healthChanged += UpdateHP;
         GameManager.Instance.gameOver += GameOver;
     }
@@ -77,8 +77,8 @@ public class GameUIController : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.scoreChanged -= UpdateAltitude;
-            GameManager.Instance.highScoreChanged -= UpdateHighestAltitude;
+            GameManager.Instance.changeScoreUI -= UpdateAltitude;
+            GameManager.Instance.changeHighScoreUI -= UpdateHighestAltitude;
             GameManager.Instance.healthChanged -= UpdateHP;
             GameManager.Instance.gameOver -= GameOver;
         }

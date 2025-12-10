@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
         }
 
         //If player is outside the safe zone, start spawning hazards:
-        if(rb.position.y > 3.0)
+        if(rb.position.y > 10.0)
         {    
             float upperChance = 100.0f - altitude * 250.0f;     //Increase rightmost value to increase how quickly difficulty increases.
             if(upperChance < 10.0f)
@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
 
             float asteroidChance = UnityEngine.Random.Range(0f, upperChance);
             //Spawn an asteroid:
-            if(asteroidChance < 1.0f)
+            if(asteroidChance < 1.0f && HP > 0.0f)
             {
                 GameObject obstacle = Instantiate<GameObject>(obstaclePrefab);
             }
@@ -130,17 +130,19 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         //Update player position, according to user input and gravity:
-        rb.AddForce(P1accel + P2accel);
-        altitude = rb.position.y / 1000.0f;
-        //Debug.Log("P1spd = " + P1spd + ", P2spd = " + P2spd);
-
-        //Managing speed values:
-        SpdCheck();
-
-        //Make sure the player never moves along the z-axis:
-        /*Vector3 onZ = rb.position;
-        onZ.z = 0.0f;
-        rb.MovePosition(onZ);*/
+        if(HP > 0.0f)
+        {
+            rb.AddForce(P1accel + P2accel);
+            altitude = rb.position.y / 1000.0f;
+            //Managing speed values:
+            SpdCheck();
+        }
+        //If player HP depleted, remove model:
+        else
+        {
+            Destroy(transform.GetChild(0).gameObject);
+        }
+        
 
         //Update value used for collision damage:
         signVelocity = rb.linearVelocity.magnitude * Mathf.Sign(rb.linearVelocity.y); //Return a negative value if ship is going down.
@@ -171,7 +173,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Take damage:
-        if(Math.Abs(lastSignVelocity) > acceleration - 1.0)
+        if(Math.Abs(lastSignVelocity) > 1.0f)
         {
             HP -= Math.Abs(lastSignVelocity) * acceleration * 0.5f;
         }
@@ -255,7 +257,7 @@ public class Player : MonoBehaviour
     float ZoomCamera(float _playerY)
     {
         //Have camera zoom out as the rocket gains more distance:
-        float offsetCamera = -10f - _playerY / 10;
+        float offsetCamera = -10f - _playerY / 15;
         float offsetCameraLimit = -100.0f;
         if(offsetCamera < offsetCameraLimit)
         {
